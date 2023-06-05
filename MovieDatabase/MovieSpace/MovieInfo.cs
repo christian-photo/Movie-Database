@@ -25,7 +25,6 @@ namespace MovieDatabase.MovieSpace
         public string Languages { get; set; }
         public string ImDbRating { get; set; }
         public string MetacriticRating { get; set; }
-        public string FilePath { get; set; }
         public string CoverPath { get; set; }
         public string Uuid { get; set; }
     }

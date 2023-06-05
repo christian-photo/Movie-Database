@@ -13,12 +13,15 @@ using MovieDatabase.Core;
 using MovieDatabase.MovieSpace;
 using MovieDatabase.MovieSpace.Database;
 using MovieDatabase.MVVM.Model;
+using MovieDatabase.MVVM.View;
+using MovieDatabase.MVVM.ViewModel;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace MovieDatabase.MVVM
 {
@@ -65,14 +68,7 @@ namespace MovieDatabase.MVVM
         private string _title;
         public string Title
         {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(_title))
-                {
-                    return "";
-                }
-                return $"{Loc.Instance[TranslationString.TITLE]}: " + _title;
-            }
+            get => _title;
             set
             {
                 _title = value;

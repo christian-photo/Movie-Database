@@ -88,8 +88,7 @@ namespace MovieDatabase.MovieSpace
                     Genres = obj.Value<object>("genres").ToString(),
                     Languages = obj.Value<object>("languages").ToString(),
                     ImDbRating = obj.Value<string>("imDbRating"),
-                    MetacriticRating = obj.Value<string>("metacriticRating"),
-                    FilePath = moviePath
+                    MetacriticRating = obj.Value<string>("metacriticRating")
                 };
 
                 if (NewGuid)

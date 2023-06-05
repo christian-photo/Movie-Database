@@ -21,101 +21,127 @@
     DataContext="{Binding HomeVM, Source={x:Static viewmodel:MainViewModel.Instance}}"
     mc:Ignorable="d">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="550" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="700" />
+            <ColumnDefinition Width="50" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
 
-        <Border
-            Grid.Row="0"
-            Height="Auto"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Center"
-            BorderBrush="Transparent"
-            BorderThickness="0">
-            <StackPanel
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Orientation="Horizontal">
-                <Image
-                    Width="400"
-                    Height="576"
-                    Source="{Binding Image}" />
-                <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
-                    <Image
-                        Width="20"
-                        Height="20"
-                        Margin="5"
-                        HorizontalAlignment="Left"
-                        MouseLeftButtonUp="Edit"
-                        Source="{StaticResource EditIcon}"
-                        Visibility="{Binding EditVisibility}" />
-                    <TextBlock
-                        Margin="10"
-                        FontSize="30"
-                        Foreground="White"
-                        Text="{Binding Title}" />
-                    <TextBlock
-                        Margin="10"
-                        FontSize="20"
-                        Foreground="White"
-                        Text="{Binding Year}" />
-                    <TextBlock
-                        Margin="10"
-                        FontSize="20"
-                        Foreground="White"
-                        Text="{Binding Runtime}" />
-                    <TextBlock
-                        Margin="10"
-                        FontSize="20"
-                        Foreground="White"
-                        Text="{Binding Actors}" />
-                    <TextBlock
-                        Margin="10"
-                        FontSize="20"
-                        Foreground="White"
-                        Text="{Binding Awards}" />
-                    <TextBlock
-                        Margin="10"
-                        FontSize="20"
-                        Foreground="White"
-                        Text="{Binding Genres}" />
-                    <TextBlock
-                        Margin="10"
-                        FontSize="20"
-                        Foreground="White"
-                        Text="{Binding IMDBRating}" />
-                    <TextBlock
-                        Margin="10"
-                        FontSize="20"
-                        Foreground="White"
-                        Text="{Binding MetaScore}" />
-                    <TextBlock
-                        Margin="10,0,0,0"
-                        FontSize="18"
-                        Foreground="White"
-                        MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"
-                        Text="{Binding Plot}"
-                        TextWrapping="Wrap"
-                        Visibility="{Binding EditVisibility}" />
-                    <ui:Button
-                        Width="350"
-                        Height="80"
-                        Margin="10,30,0,0"
-                        HorizontalAlignment="Left"
-                        BorderBrush="Transparent"
-                        Command="{Binding PlayMovieCommand}"
-                        Content="{Binding PlayText}"
-                        FontSize="28"
-                        Icon="Play24"
-                        Visibility="{Binding EditVisibility}" />
+        <Image
+            Grid.Column="2"
+            Source="{Binding Image}"
+            Stretch="UniformToFill">
+            <Image.Effect>
+                <BlurEffect Radius="200" />
+            </Image.Effect>
+        </Image>
+
+        <ScrollViewer>
+            <StackPanel Grid.Column="0" Orientation="Vertical">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock
+                            Margin="10"
+                            HorizontalAlignment="Center"
+                            FontSize="40"
+                            Foreground="White"
+                            Text="{Binding Title}" />
+                        <Image
+                            Width="20"
+                            Height="20"
+                            Margin="5"
+                            HorizontalAlignment="Right"
+                            MouseLeftButtonUp="Edit"
+                            Source="{StaticResource EditIcon}"
+                            Visibility="{Binding EditVisibility}" />
+                    </StackPanel>
+
+                    <Image Grid.Column="0" Source="{Binding Image}" />
                 </StackPanel>
+
+                <Border
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    BorderBrush="Transparent"
+                    BorderThickness="0">
+                    <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
+                        <TextBlock
+                            Margin="10"
+                            HorizontalAlignment="Center"
+                            FontSize="20"
+                            Foreground="White"
+                            Text="{Binding Year}" />
+                        <TextBlock
+                            Margin="10"
+                            HorizontalAlignment="Center"
+                            FontSize="20"
+                            Foreground="White"
+                            Text="{Binding Runtime}"
+                            TextWrapping="Wrap" />
+                        <Separator HorizontalAlignment="Stretch" />
+                        <TextBlock
+                            Margin="10,15,10,10"
+                            HorizontalAlignment="Center"
+                            FontSize="20"
+                            Foreground="White"
+                            Text="{Binding Actors}"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Margin="10"
+                            HorizontalAlignment="Center"
+                            FontSize="20"
+                            Foreground="White"
+                            Text="{Binding Awards}"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Margin="10"
+                            HorizontalAlignment="Center"
+                            FontSize="20"
+                            Foreground="White"
+                            Text="{Binding Genres}"
+                            TextWrapping="Wrap" />
+                        <Separator HorizontalAlignment="Stretch" />
+                        <TextBlock
+                            Margin="10,15,10,10"
+                            HorizontalAlignment="Center"
+                            FontSize="20"
+                            Foreground="White"
+                            Text="{Binding IMDBRating}" />
+                        <TextBlock
+                            Margin="10"
+                            HorizontalAlignment="Center"
+                            FontSize="20"
+                            Foreground="White"
+                            Text="{Binding MetaScore}" />
+                        <Separator />
+                        <TextBlock
+                            Margin="10,15,0,0"
+                            HorizontalAlignment="Center"
+                            FontSize="18"
+                            Foreground="White"
+                            MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"
+                            Text="{Binding Plot}"
+                            TextWrapping="Wrap"
+                            Visibility="{Binding EditVisibility}" />
+                        <ui:Button
+                            Width="350"
+                            Height="80"
+                            Margin="10,30,0,40"
+                            HorizontalAlignment="Center"
+                            BorderBrush="Transparent"
+                            Command="{Binding PlayMovieCommand}"
+                            Content="{Binding PlayText}"
+                            FontSize="28"
+                            Icon="Play24"
+                            Visibility="{Binding EditVisibility}" />
+                    </StackPanel>
+                </Border>
             </StackPanel>
-        </Border>
+        </ScrollViewer>
 
         <!--#region Stackpanel bottom-->
-        <Grid Grid.Row="1">
+        <Grid Grid.Column="2">
             <ListView
                 x:Name="Panel_Mini"
                 Margin="5"
