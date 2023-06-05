@@ -1,0 +1,49 @@
+﻿<!--
+    Copyright © 2023 Christian Palm (christian@palm-family.de)
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
+<Application
+    x:Class="MovieDatabase.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:MovieDatabase.MVVM.Model.Converter"
+    xmlns:local="clr-namespace:MovieDatabase"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:view="clr-namespace:MovieDatabase.MVVM.View"
+    xmlns:viewmodel="clr-namespace:MovieDatabase.MVVM.ViewModel"
+    StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Theme/RadioButtonTheme.xaml" />
+                <ResourceDictionary Source="Theme/SVG.xaml" />
+                <ResourceDictionary Source="Theme/ButtonHover.xaml" />
+                <ResourceDictionary Source="Theme/SearchbarTheme.xaml" />
+                <ResourceDictionary Source="Theme/FlatCombobox.xaml" />
+                <ResourceDictionary Source="Theme/Window.xaml" />
+
+                <ResourceDictionary Source="/MovieDatabase;component/Theme/Controls/MovieControl.xaml" />
+
+                <ui:ThemesDictionary Theme="Dark" />
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converter:DatabaseNameConverter x:Key="DatabaseNameConverter" />
+
+            <DataTemplate DataType="{x:Type viewmodel:HomeViewModel}">
+                <view:HomeView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodel:SearchViewModel}">
+                <view:SearchView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodel:ImportViewModel}">
+                <view:ImportView />
+            </DataTemplate>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

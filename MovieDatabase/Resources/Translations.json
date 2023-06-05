@@ -1,0 +1,126 @@
+﻿{
+  "languages": [
+    "EN",
+    "DE"
+  ],
+  "title": {
+    "EN": "Title",
+    "DE": "Titel"
+  },
+  "actors": {
+    "EN": "Actors",
+    "DE": "Schauspieler"
+  },
+  "year": {
+    "EN": "Year",
+    "DE": "Jahr"
+  },
+  "genres": {
+    "EN": "Genres",
+    "DE": "Kategorie"
+  },
+  "runtime": {
+    "EN": "Runtime",
+    "DE": "Laufzeit"
+  },
+  "awards": {
+    "EN": "Awards",
+    "DE": "Preise"
+  },
+  "imdb": {
+    "EN": "IMDB Rating",
+    "DE": "IMDB Bewertung"
+  },
+  "metascore": {
+    "EN": "MetaScore",
+    "DE": "MetaScore"
+  },
+  "no_work": {
+    "EN": "No work to do",
+    "DE": "Nichts zu tun"
+  },
+  "err_no_conn_folder": {
+    "EN": "Can't download Information. Cancelling Importing Folders",
+    "DE": "Internet Timeout. Ordner Import Abgrebrochen"
+  },
+  "err_no_conn_file": {
+    "EN": "Can't download Information. Cancelling Importing Files",
+    "DE": "Internet Timeout. Datei Import Abgrebrochen"
+  },
+  "import_folders": {
+    "EN": "Import Folders",
+    "DE": "Ordner importieren"
+  },
+  "import_files": {
+    "EN": "Import Files",
+    "DE": "Filme importieren"
+  },
+  "download_covers": {
+    "EN": "Download Covers",
+    "DE": "Covers herunterladen"
+  },
+  "title_by_filename": {
+    "EN": "Try get Title by Filename (recommended)",
+    "DE": "Versuche Titel zu extrahieren (Empfohlen)"
+  },
+  "api_prompt": {
+    "EN": "Please enter the api key for imdb-api.com",
+    "DE": "Bitte den API-Schlüssel für imdb-api.com eingeben"
+  },
+  "submit": {
+    "EN": "Submit",
+    "DE": "Fertig"
+  },
+  "err_cover": {
+    "EN": "Can't download Information. Cancelling downloading Covers",
+    "DE": "Cover herunterladen abgebrochen: Keine Netzwerk verbindung"
+  },
+  "coll_info": {
+    "EN": "Collecting and saving information about the movie ",
+    "DE": "Registriere "
+  },
+  "click_to_show_plot": {
+    "EN": "Click here to show the plot (Enter to exit)",
+    "DE": "Hier klicken um Zusammenfassung zu sehen (Enter um zu schliessen)"
+  },
+  "l_cached_info": {
+    "EN": "Loading Cached Information: ",
+    "DE": "Lade gespeicherte Informationen: "
+  },
+  "search": {
+    "EN": "Search",
+    "DE": "Suche"
+  },
+  "home": {
+    "EN": "Home",
+    "DE": "Start"
+  },
+  "import": {
+    "EN": "Import",
+    "DE": "Import"
+  },
+  "available_sys_lang": {
+    "EN": "Available Program languages",
+    "DE": "Verfügbare Programm Sprachen"
+  },
+  "enter_imdb_name": {
+    "EN": "Enter IMDB Name",
+    "DE": "IMDB Namen einfügen"
+  },
+  "available_imdb_lang": {
+    "EN": "Available IMDB languages",
+    "DE": "Verfügbare IMDB Sprachen"
+  },
+  "not_collected_info": {
+    "EN": "Application wasn't able to collect Information about these Movies: (Check logs for more Information!)\n",
+    "DE": "Programm konnte folgende Filme nicht registrieren: (Log Dateien für mehr Informationen prüfen!)\n"
+  },
+  "play_text": {
+    "EN": "Play Movie",
+    "DE": "Film Starten"
+  },
+  "include_sub_dirs": {
+    "EN": "Include sub-directories",
+    "DE": "Verwende unter-Ordner"
+  }
+}
