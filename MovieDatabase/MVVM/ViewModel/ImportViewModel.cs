@@ -327,7 +327,7 @@ namespace MovieDatabase.MVVM.ViewModel
                 State = Loc.Instance[TranslationString.NO_WORK];
                 foreach (Movie mov in NewMovies)
                 {
-                    MainViewModel.Instance.HomeVM.AddMovieToView(mov.Info.Title, mov);
+                    MainViewModel.Instance.HomeVM.AddMovieToView(mov);
                 }
                 MainViewModel.Instance.SearchVM.RaiseAllPropertiesChanged();
                 MainViewModel.Instance.HomeVM.RaiseAllPropertiesChanged();
@@ -376,7 +376,7 @@ namespace MovieDatabase.MVVM.ViewModel
                 }
                 foreach (Movie mov in databaseMediator.GetCurrentDatabase().Movies)
                 {
-                    MainViewModel.Instance.HomeVM.AddMovieToView(mov.Info.Title, mov);
+                    MainViewModel.Instance.HomeVM.AddMovieToView(mov);
                 }
                 MainViewModel.Instance.SearchVM.RaiseAllPropertiesChanged();
                 MainViewModel.Instance.HomeVM.RaiseAllPropertiesChanged();
@@ -399,6 +399,9 @@ namespace MovieDatabase.MVVM.ViewModel
 
                     foreach (Movie movie in databaseMediator.GetCurrentDatabase().Movies)
                     {
+                        if (File.Exists(movie.Info.CoverPath))
+                            continue;
+
                         using (HttpClient client = new HttpClient())
                         {
                             string[] split = movie.Info.Image.Split('.'); // split[split.Length - 1] = the extension of the file
@@ -497,9 +500,8 @@ namespace MovieDatabase.MVVM.ViewModel
                 if (Imports.Count > 0)
                 {
                     IsSyncing = true;
-
-                    Visibility = Visibility.Hidden;
                 }
+                Visibility = Visibility.Hidden;
             });
 
             UpdateMovies = new RelayCommand(async o =>
@@ -573,7 +575,7 @@ namespace MovieDatabase.MVVM.ViewModel
 
                     foreach (Movie movie in databaseMediator.GetCurrentDatabase().Movies)
                     {
-                        MainViewModel.Instance.HomeVM.AddMovieToView(movie.Info.Title, movie);
+                        MainViewModel.Instance.HomeVM.AddMovieToView(movie);
                     }
 
                     if (databaseMediator.GetCurrentDatabase().Movies.Count > 0)

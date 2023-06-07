@@ -12,7 +12,10 @@
 using MovieDatabase.MovieSpace;
 using MovieDatabase.MovieSpace.Database;
 using MovieDatabase.MVVM.Model;
+using Serilog;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace MovieDatabase.MVVM.ViewModel
@@ -38,17 +41,21 @@ namespace MovieDatabase.MVVM.ViewModel
 
         public void CreateMovieList()
         {
+            Stopwatch sw = Stopwatch.StartNew();
+
             Collection = new List<MovieControl>();
 
-            foreach (Movie mov in databaseMediator.GetCurrentDatabase().Movies)
+            MovieDB currentDatabase = databaseMediator.GetCurrentDatabase();
+
+            foreach (Movie mov in currentDatabase.Movies)
             {
-                AddMovieToView(mov.Info.Title, mov);
+                AddMovieToView(mov);
             }
 
-            if (databaseMediator.GetCurrentDatabase().Movies.Count != 0)
+            if (currentDatabase.Movies.Count != 0)
             {
-                SelectedMovie = databaseMediator.GetCurrentDatabase().Movies[0];
-                SetSelectedMovie(databaseMediator.GetCurrentDatabase().Movies[0]);
+                SelectedMovie = currentDatabase.Movies[0];
+                SetSelectedMovie(currentDatabase.Movies[0]);
                 SelectedChanged.Execute(null);
             }
 
@@ -75,6 +82,10 @@ namespace MovieDatabase.MVVM.ViewModel
 
                 EditVisibility = Visibility.Hidden;
             }
+
+            sw.Stop();
+
+            Log.Logger.Information($"Creating the Movie View took {sw.ElapsedMilliseconds}ms");
         }
     }
 }

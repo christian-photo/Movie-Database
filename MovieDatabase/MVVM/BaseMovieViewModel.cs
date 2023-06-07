@@ -13,15 +13,12 @@ using MovieDatabase.Core;
 using MovieDatabase.MovieSpace;
 using MovieDatabase.MovieSpace.Database;
 using MovieDatabase.MVVM.Model;
-using MovieDatabase.MVVM.View;
-using MovieDatabase.MVVM.ViewModel;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 
 namespace MovieDatabase.MVVM
 {
@@ -287,9 +284,9 @@ namespace MovieDatabase.MVVM
             PlayMovieCommand = new RelayCommand(o => PlayMovie());
         }
 
-        public void AddMovieToView(string Title, Movie movie)
+        public void AddMovieToView(Movie movie)
         {
-            MovieControl control = new MovieControl(Title, movie.GetCover()) 
+            MovieControl control = new MovieControl(movie.Info.Title, movie.GetCover())
             { 
                 Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#0E3C4F"),
                 Margin = new Thickness(25, 15, 25, 20),
@@ -300,6 +297,7 @@ namespace MovieDatabase.MVVM
             list.AddRange(Collection);
             list.Add(control);
             Collection = list;
+
             if (SelectedMovie != null) 
                 SetSelectedMovie(SelectedMovie);
 
@@ -352,7 +350,7 @@ namespace MovieDatabase.MVVM
         {
             SelectedMovie = movie;
 
-            Image = movie?.GetCover();
+            Image = movie?.GetCover(512);
 
             // Show Title
             Title = movie.Info.Title;

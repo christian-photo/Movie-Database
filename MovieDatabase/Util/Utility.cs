@@ -9,6 +9,7 @@
 
 #endregion "copyright"
 
+using Serilog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,7 +20,6 @@ namespace MovieDatabase.Util
 {
     public static class Utility
     {
-
         public static HttpClientHandler FastClientHandler = new HttpClientHandler()
         {
             Proxy = null,
@@ -31,15 +31,20 @@ namespace MovieDatabase.Util
             try
             {
                 Ping myPing = new Ping();
-                string host = "google.com";
+                const string host = "google.com";
                 byte[] buffer = new byte[32];
-                int timeout = 500;
+                const int timeout = 1000;
                 PingOptions pingOptions = new PingOptions();
                 PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
-                return reply.Status == IPStatus.Success;
+                if (reply.Status == IPStatus.Success)
+                {
+                    return true;
+                }
+                return false;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Log.Logger.Error($"Couldn't check internet connectivity, Message:{e.Message}\nStacktrace: {e.StackTrace}");
                 return false;
             }
         }

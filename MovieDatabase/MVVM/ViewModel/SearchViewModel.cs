@@ -171,7 +171,7 @@ namespace MovieDatabase.MVVM.ViewModel
             Collection.Clear();
             foreach (Movie mov in movies)
             {
-                AddMovieToView(mov.Info.Title, mov);
+                AddMovieToView(mov);
             }
             SearchView.Reload();
             SetSelectedMovie(movies[0]);
