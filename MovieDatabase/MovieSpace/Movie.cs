@@ -9,7 +9,6 @@
 
 #endregion "copyright"
 
-using MovieDatabase.Core;
 using MovieDatabase.Util;
 using System;
 using System.Drawing;
@@ -18,7 +17,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
 
 namespace MovieDatabase.MovieSpace
 {
@@ -34,7 +32,7 @@ namespace MovieDatabase.MovieSpace
 
         public ImageSource GetCover(int width = 175)
         {
-            if (!string.IsNullOrWhiteSpace(Info.CoverPath)) // Check if cover is downloaded
+            if (File.Exists(Info.CoverPath)) // Check if cover is downloaded
             {
                 BitmapImage bitmapImage = new BitmapImage();
                 bitmapImage.BeginInit();
@@ -58,11 +56,6 @@ namespace MovieDatabase.MovieSpace
                 bitmapImage.BeginInit();
                 bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapImage.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-                if (width > 0)
-                {
-                    bitmapImage.DecodePixelHeight = (int)(GetHeight(width) * 1.75);
-                    bitmapImage.DecodePixelWidth = (int)(width * 1.75);
-                }
                 bitmapImage.UriSource = new Uri(Info.Image);
                 bitmapImage.EndInit();
                 if (bitmapImage.CanFreeze)
@@ -78,7 +71,7 @@ namespace MovieDatabase.MovieSpace
 
         private double GetHeight(int width)
         {
-            Stream s = File.OpenRead(Path.Combine(Info.CoverPath));
+            Stream s = File.OpenRead(Info.CoverPath);
             Image img = Bitmap.FromStream(s, false, false); // Read only the metadata
             double factor = (double)img.Width / (double)width;
             double targetHeight = (double)img.Height / factor;
@@ -113,6 +106,14 @@ namespace MovieDatabase.MovieSpace
                 return true;
             }
             return false;
+        }
+
+        public void Cleanup()
+        {
+            if (File.Exists(Info.CoverPath))
+            {
+                File.Delete(Info.CoverPath);
+            }
         }
     }
 }

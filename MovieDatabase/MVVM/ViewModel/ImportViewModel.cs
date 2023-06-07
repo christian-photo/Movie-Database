@@ -11,6 +11,7 @@
 
 using Microsoft.WindowsAPICodePack.Dialogs;
 using MovieDatabase.Core;
+using MovieDatabase.Core.Utility.PlotPopup;
 using MovieDatabase.MovieSpace;
 using MovieDatabase.MovieSpace.Database;
 using MovieDatabase.Util;
@@ -323,6 +324,9 @@ namespace MovieDatabase.MVVM.ViewModel
                     NewMovies.Add(mov);
                     databaseMediator.GetCurrentDatabase().Movies.Add(mov);
                 }
+                PlotPopup cover = new PlotPopup();
+                cover.PlotText.Text = "Download covers? Recommended for memory efficiency";
+                cover.ShowDialog();
                 Visibility = Visibility.Hidden;
                 State = Loc.Instance[TranslationString.NO_WORK];
                 foreach (Movie mov in NewMovies)

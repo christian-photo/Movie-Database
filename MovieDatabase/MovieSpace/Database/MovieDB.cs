@@ -67,11 +67,12 @@ namespace MovieDatabase.MovieSpace.Database
         {
             try
             {
-                int counter = 0;
+                foreach (Movie movie in Movies)
+                {
+                    movie.Cleanup();
+                }
 
-                Movies.Where(movie => movie.Info.CoverPath != string.Empty).ToList().ForEach(movie => { File.Delete(movie.Info.CoverPath); counter++; });
-
-                Log.Logger.Information($"Successfully cleaned up {counter} files");
+                Log.Logger.Information($"Successfully cleaned up files");
             } catch (Exception ex)
             {
                 Log.Logger.Error($"Something went wrong while cleaning up database {this}, Message: {ex.Message}\nStacktrace: {ex.StackTrace}");

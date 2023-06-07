@@ -17,6 +17,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
@@ -28,6 +29,7 @@ namespace MovieDatabase.MVVM
 
         public RelayCommand SelectedChanged { get; set; }
         public RelayCommand PlayMovieCommand { get; set; }
+        public RelayCommand DeleteMovie { get; set; }
 
         private ImageSource _image;
         public ImageSource Image
@@ -282,6 +284,40 @@ namespace MovieDatabase.MVVM
             });
 
             PlayMovieCommand = new RelayCommand(o => PlayMovie());
+
+            DeleteMovie = new RelayCommand(o =>
+            {
+                databaseMediator.GetCurrentDatabase().Movies.Remove(SelectedMovie);
+                Image = null;
+                RemoveMovieFromView(SelectedMovie);
+
+                GC.Collect(); // Cleanup useage of cover
+                SelectedMovie.Cleanup();
+            });
+        }
+
+        public void RemoveMovieFromView(Movie movie)
+        {
+            List<MovieControl> list = new List<MovieControl>();
+            list.AddRange(Collection);
+            MovieControl control = list.Where(x => x.Title == movie.Info.Title).First();
+            if (control is null)
+                return;
+
+            control.ImageSource = null;
+            list.Remove(control);
+            Collection = list;
+
+            Title = "";
+            Year = "";
+            Runtime = "";
+            Actors = "";
+            Awards = "";
+            Genres = "";
+            IMDBRating = "";
+            MetaScore = "";
+
+            EditVisibility = Visibility.Hidden;
         }
 
         public void AddMovieToView(Movie movie)

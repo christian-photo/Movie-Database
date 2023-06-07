@@ -40,13 +40,12 @@
         <ScrollViewer>
             <StackPanel Grid.Column="0" Orientation="Vertical">
                 <StackPanel Orientation="Vertical">
-                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <TextBlock
-                            Margin="10"
-                            HorizontalAlignment="Center"
-                            FontSize="40"
-                            Foreground="White"
-                            Text="{Binding Title}" />
+                    <Grid HorizontalAlignment="Stretch">
+                        <ui:Button
+                            Command="{Binding DeleteMovie}"
+                            Icon="BinFull20"
+                            ToolTip="Delete Movie"
+                            Visibility="{Binding EditVisibility}" />
                         <Image
                             Width="20"
                             Height="20"
@@ -55,7 +54,15 @@
                             MouseLeftButtonUp="Edit"
                             Source="{StaticResource EditIcon}"
                             Visibility="{Binding EditVisibility}" />
-                    </StackPanel>
+                    </Grid>
+
+                    <TextBlock
+                        Margin="10"
+                        HorizontalAlignment="Center"
+                        FontSize="40"
+                        Foreground="White"
+                        Text="{Binding Title}"
+                        TextWrapping="Wrap" />
 
                     <Image Grid.Column="0" Source="{Binding Image}" />
                 </StackPanel>
@@ -79,7 +86,7 @@
                             Foreground="White"
                             Text="{Binding Runtime}"
                             TextWrapping="Wrap" />
-                        <Separator HorizontalAlignment="Stretch" />
+                        <Separator HorizontalAlignment="Stretch" Visibility="{Binding EditVisibility}" />
                         <TextBlock
                             Margin="10,15,10,10"
                             HorizontalAlignment="Center"
@@ -101,7 +108,7 @@
                             Foreground="White"
                             Text="{Binding Genres}"
                             TextWrapping="Wrap" />
-                        <Separator HorizontalAlignment="Stretch" />
+                        <Separator HorizontalAlignment="Stretch" Visibility="{Binding EditVisibility}" />
                         <TextBlock
                             Margin="10,15,10,10"
                             HorizontalAlignment="Center"
@@ -114,7 +121,7 @@
                             FontSize="20"
                             Foreground="White"
                             Text="{Binding MetaScore}" />
-                        <Separator />
+                        <Separator HorizontalAlignment="Stretch" Visibility="{Binding EditVisibility}" />
                         <TextBlock
                             Margin="10,15,0,0"
                             HorizontalAlignment="Center"
