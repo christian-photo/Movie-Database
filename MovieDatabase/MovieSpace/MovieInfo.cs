@@ -21,10 +21,12 @@ namespace MovieDatabase.MovieSpace
         public string Plot { get; set; }
         public string Awards { get; set; }
         public string Actors { get; set; }
+        public string Director { get; set; }
         public string Genres { get; set; }
         public string Languages { get; set; }
         public string ImDbRating { get; set; }
         public string MetacriticRating { get; set; }
+        public string RottenTomatoesRating { get; set; }
         public string CoverPath { get; set; }
         public string Uuid { get; set; }
     }

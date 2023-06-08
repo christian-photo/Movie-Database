@@ -14,6 +14,7 @@ using MovieDatabase.Util;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -27,7 +28,7 @@ namespace MovieDatabase.MovieSpace
             apikey = apiKey;
         }
 
-        public async Task<MovieInfo> MakeInfo(string title, Movie movie, bool newGuid = true, string Guid = null)
+        public async Task<MovieInfo> MakeInfo(string title, bool newGuid = true, string Guid = null)
         {
             try
             {
@@ -56,7 +57,7 @@ namespace MovieDatabase.MovieSpace
 
                 string json = await client.GetStringAsync("http://imdb-api.com/" + lang + "/API/Title/" + apikey + "/" + id);
 
-                MovieInfo Info = CreateByJson(json, movie.FilePath, newGuid, Guid);
+                MovieInfo Info = CreateByJson(json, newGuid, Guid);
                 if (Info != null)
                 {
                     return Info;
@@ -70,7 +71,7 @@ namespace MovieDatabase.MovieSpace
             }
         }
 
-        private static MovieInfo CreateByJson(string json, string moviePath, bool NewGuid = true, string uuid = null)
+        private static MovieInfo CreateByJson(string json, bool NewGuid = true, string uuid = null)
         {
             try
             {
@@ -85,10 +86,12 @@ namespace MovieDatabase.MovieSpace
                     Plot = Loc.Instance.SelectedIMDBLang == "english" ? obj.Value<string>("plot") : obj.Value<string>("plotlocal"),
                     Awards = obj.Value<string>("awards"),
                     Actors = obj.Value<object>("stars").ToString(),
+                    Director = obj.Value<string>("directors"),
                     Genres = obj.Value<object>("genres").ToString(),
                     Languages = obj.Value<object>("languages").ToString(),
                     ImDbRating = obj.Value<string>("imDbRating"),
-                    MetacriticRating = obj.Value<string>("metacriticRating")
+                    MetacriticRating = obj.Value<string>("metacriticRating"),
+                    RottenTomatoesRating = obj.Value<JArray>("ratings").Value<string>("rottenTomatoes")
                 };
 
                 if (NewGuid)
@@ -106,6 +109,36 @@ namespace MovieDatabase.MovieSpace
             {
                 Log.Logger.Error($"Something went wrong while creating the MovieInfo, Message: {ex.Message}\nStacktrace: {ex.StackTrace}");
                 return null;
+            }
+        }
+
+        public async Task<bool> Validate()
+        {
+            try
+            {
+                HttpClient client = new HttpClient(Utility.FastClientHandler);
+
+                string _json = await client.GetStringAsync("http://imdb-api.com/en/API/SearchMovie/" + apikey + "/Inception");
+
+                if (JObject.Parse(_json).Value<string>("errorMessage").StartsWith("Maximum usage"))
+                {
+                    Log.Logger.Warning("Limit of API Requests reached (IMDB)");
+                    return false;
+                }
+
+                JToken token = JObject.Parse(_json).SelectToken("$.results[0].id");
+
+                if (token is null)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error($"Error while validating IMDB, Message: {ex.Message}\nStacktrace: {ex.StackTrace}");
+                return false;
             }
         }
     }

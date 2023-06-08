@@ -15,6 +15,8 @@ namespace MovieDatabase.MovieSpace
 {
     public interface IMovieInfoProvider
     {
-        public Task<MovieInfo> MakeInfo(string title, Movie movie, bool newGuid = true, string Guid = null);
+        public Task<MovieInfo> MakeInfo(string title, bool newGuid = true, string Guid = null);
+
+        public Task<bool> Validate();
     }
 }

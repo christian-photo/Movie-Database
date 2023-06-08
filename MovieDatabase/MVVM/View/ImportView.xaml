@@ -143,6 +143,22 @@
             VerticalAlignment="Bottom"
             Orientation="Vertical">
 
+            <ui:TextBox
+                MinWidth="150"
+                Margin="0,5,0,0"
+                HorizontalAlignment="Left"
+                PlaceholderEnabled="True"
+                PlaceholderText="imdb-api.com apiKey"
+                Text="{Binding ImdbApiKey, UpdateSourceTrigger=PropertyChanged}" />
+
+            <ui:TextBox
+                MinWidth="150"
+                Margin="0,10,0,0"
+                HorizontalAlignment="Left"
+                PlaceholderEnabled="True"
+                PlaceholderText="omdbapi.com apiKey"
+                Text="{Binding OmdbApiKey, UpdateSourceTrigger=PropertyChanged}" />
+
             <Button
                 Width="Auto"
                 Margin="0,10,0,0"

@@ -10,6 +10,8 @@
 #endregion "copyright"
 
 using MovieDatabase.Util;
+using Serilog;
+using Serilog.Core;
 using System;
 using System.Drawing;
 using System.IO;
@@ -32,39 +34,44 @@ namespace MovieDatabase.MovieSpace
 
         public ImageSource GetCover(int width = 175)
         {
-            if (File.Exists(Info.CoverPath)) // Check if cover is downloaded
+            try
             {
-                BitmapImage bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-                if (width > 0)
+                if (File.Exists(Info.CoverPath)) // Check if cover is downloaded
                 {
-                    bitmapImage.DecodePixelHeight = (int)(GetHeight(width) * 1.75);
-                    bitmapImage.DecodePixelWidth = (int)(width * 1.75);
+                    BitmapImage bitmapImage = new BitmapImage();
+                    bitmapImage.BeginInit();
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
+                    if (width > 0)
+                    {
+                        bitmapImage.DecodePixelHeight = (int)(GetHeight(width) * 1.75);
+                        bitmapImage.DecodePixelWidth = (int)(width * 1.75);
+                    }
+                    bitmapImage.UriSource = new Uri(Info.CoverPath);
+                    bitmapImage.EndInit();
+                    if (bitmapImage.CanFreeze)
+                        bitmapImage.Freeze();
+
+                    return bitmapImage;
                 }
-                bitmapImage.UriSource = new Uri(Info.CoverPath);
-                bitmapImage.EndInit();
-                if (bitmapImage.CanFreeze)
-                    bitmapImage.Freeze();
+                else if (Utility.IsConnectedToInternet() && Info.Image != "N/A") // Check if internet connection is available to download the cover
+                {
+                    BitmapImage bitmapImage = new BitmapImage();
+                    bitmapImage.BeginInit();
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
+                    bitmapImage.UriSource = new Uri(Info.Image);
+                    bitmapImage.EndInit();
+                    if (bitmapImage.CanFreeze)
+                        bitmapImage.Freeze();
 
-                return bitmapImage;
+                    return bitmapImage;
+                }
+                return (ImageSource)Application.Current.MainWindow.FindResource("CoverIcon");
             }
-            else if (Utility.IsConnectedToInternet()) // Check if internet connection is available to download the cover
+            catch (Exception ex)
             {
-                BitmapImage bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-                bitmapImage.UriSource = new Uri(Info.Image);
-                bitmapImage.EndInit();
-                if (bitmapImage.CanFreeze)
-                    bitmapImage.Freeze();
-
-                return bitmapImage;
-            }
-            else // Use a fall back icon
-            {
+                Log.Logger.Error(ex.Message + "\n" + ex.StackTrace);
                 return (ImageSource)Application.Current.MainWindow.FindResource("CoverIcon");
             }
         }
@@ -98,7 +105,7 @@ namespace MovieDatabase.MovieSpace
 
         public async Task<bool> GetInfo(IMovieInfoProvider infoProvider, string title, bool newGuid = true, string Guid = null)
         {
-            MovieInfo info = await infoProvider.MakeInfo(title, this, newGuid, Guid);
+            MovieInfo info = await infoProvider.MakeInfo(title, newGuid, Guid);
 
             if (info != null)
             {

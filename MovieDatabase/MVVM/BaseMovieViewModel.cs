@@ -337,7 +337,7 @@ namespace MovieDatabase.MVVM
             if (SelectedMovie != null) 
                 SetSelectedMovie(SelectedMovie);
 
-            Log.Logger.Verbose($"Added movie {Title} to view");
+            Log.Logger.Verbose($"Added movie {movie.Info.Title} to view");
         }
 
         public void ClearView()

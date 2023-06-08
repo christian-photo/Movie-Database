@@ -64,16 +64,6 @@ namespace MovieDatabase
             new MainViewModel(databaseMediator);
 
             InitializeComponent();
-
-            if (string.IsNullOrWhiteSpace(informations.GetApiKey()))
-            {
-                APIKeyPrompt p = new()
-                {
-                    Topmost = true
-                };
-                p.ShowDialog();
-            }
-
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)

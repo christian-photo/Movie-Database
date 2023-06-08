@@ -25,7 +25,10 @@ namespace MovieDatabase.Util
         public LogEventLevel LogLevel = LogEventLevel.Information; 
 
         [JsonProperty]
-        private string _apiKey = string.Empty;
+        private string _ImdbapiKey = string.Empty;
+
+        [JsonProperty]
+        private string _OmdbApiKey = string.Empty;
 
         public static ProgramInformations Create()
         {
@@ -49,11 +52,18 @@ namespace MovieDatabase.Util
             Log.Logger.Information($"Successfully saved {nameof(ProgramInformations)}");
         }
 
-        internal string GetApiKey() => _apiKey;
+        internal string GetImdbApiKey() => _ImdbapiKey;
 
-        internal void SetApiKey(string key)
+        internal void SetImdbApiKey(string key)
         {
-            _apiKey = key;
+            _ImdbapiKey = key;
+        }
+
+        internal string GetOmdbApiKey() => _OmdbApiKey;
+
+        internal void SetOmdbApiKey(string key)
+        {
+            _OmdbApiKey = key;
         }
     }
 }

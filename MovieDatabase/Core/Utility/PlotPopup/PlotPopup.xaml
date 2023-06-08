@@ -14,10 +14,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="PlotPopup"
-    Width="800"
-    Height="450"
-    MinWidth="300"
-    MinHeight="200"
+    Width="900"
+    Height="500"
+    MinWidth="450"
+    MinHeight="300"
     ExtendsContentIntoTitleBar="True"
     KeyUp="CloseWindow"
     MouseLeftButtonDown="Window_MouseLeftButtonDown"
@@ -29,13 +29,15 @@
     mc:Ignorable="d">
 
     <Grid>
-        <TextBlock
-            Name="PlotText"
-            Margin="10"
-            FontSize="20"
-            Foreground="White"
-            Text=""
-            TextWrapping="Wrap" />
+        <ScrollViewer>
+            <TextBlock
+                Name="PlotText"
+                Margin="10"
+                FontSize="17"
+                Foreground="White"
+                Text=""
+                TextWrapping="Wrap" />
+        </ScrollViewer>
         <TextBlock
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"

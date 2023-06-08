@@ -251,6 +251,26 @@ namespace MovieDatabase.MVVM.ViewModel
             }
         }
 
+        public string ImdbApiKey
+        {
+            get => MainWindow.informations.GetImdbApiKey();
+            set
+            {
+                MainWindow.informations.SetImdbApiKey(value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string OmdbApiKey
+        {
+            get => MainWindow.informations.GetOmdbApiKey();
+            set
+            {
+                MainWindow.informations.SetOmdbApiKey(value);
+                OnPropertyChanged();
+            }
+        }
+
         private DatabaseMediator databaseMediator;
 
         public IMovieInfoProvider InfoProvider { get; set; }
@@ -259,7 +279,8 @@ namespace MovieDatabase.MVVM.ViewModel
         {
             databaseMediator = mediator;
 
-            InfoProvider = new ImdbProvider(MainWindow.informations.GetApiKey());
+            // InfoProvider = new ImdbProvider(MainWindow.informations.GetImdbApiKey());
+            InfoProvider = new OmdbInfoProvider(MainWindow.informations.GetOmdbApiKey());
 
             ImportFolders = new RelayCommand(async o =>
             {
@@ -278,6 +299,9 @@ namespace MovieDatabase.MVVM.ViewModel
                     Log.Logger.Warning($"Can't download Information, not connected to the internet. Cancelling Task");
                     return;
                 }
+
+                if (!await InfoProvider.Validate())
+                    return;
 
                 Visibility = Visibility.Visible;
 
@@ -351,6 +375,9 @@ namespace MovieDatabase.MVVM.ViewModel
                     Log.Logger.Warning($"Can't download Information, not connected to the internet. Cancelling Task");
                     return;
                 }
+
+                if (!await InfoProvider.Validate())
+                    return;
 
                 Visibility = Visibility.Visible;
 

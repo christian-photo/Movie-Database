@@ -77,11 +77,11 @@
   },
   "coll_info": {
     "EN": "Collecting and saving information about the movie ",
-    "DE": "Registriere "
+    "DE": "Registriere Film"
   },
   "click_to_show_plot": {
-    "EN": "Click here to show the plot (Enter to exit)",
-    "DE": "Hier klicken um Zusammenfassung zu sehen (Enter um zu schliessen)"
+    "EN": "Click here to show the plot (could be a spoiler)",
+    "DE": "Hier klicken um Zusammenfassung zu sehen (Könnte den Film verraten)"
   },
   "l_cached_info": {
     "EN": "Loading Cached Information: ",
