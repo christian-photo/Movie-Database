@@ -22,7 +22,8 @@ namespace MovieDatabase.Util
     {
         public string Language = string.Empty;
         public string IMDBLanguage = string.Empty;
-        public LogEventLevel LogLevel = LogEventLevel.Information; 
+        public LogEventLevel LogLevel = LogEventLevel.Information;
+        public bool FullOmdbPlot = false;
 
         [JsonProperty]
         private string _ImdbapiKey = string.Empty;

@@ -35,7 +35,6 @@ namespace MovieDatabase.MVVM.ViewModel
 
         public void RaiseAllPropertiesChanged()
         {
-            CreateMovieList();
             AllPropertiesChanged();
         }
 

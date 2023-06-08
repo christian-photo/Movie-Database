@@ -22,19 +22,22 @@ namespace MovieDatabase.MovieSpace
     public class OmdbInfoProvider : IMovieInfoProvider
     {
         private string apiKey;
+        private bool fullPlot;
 
-        public OmdbInfoProvider(string apiKey)
+        public OmdbInfoProvider(string apiKey, bool fullplot)
         {
             this.apiKey = apiKey;
+            this.fullPlot = fullplot;
         }
 
         public async Task<MovieInfo> MakeInfo(string title, bool newGuid = true, string Guid = null)
         {
             try
             {
+                string plot = fullPlot ? "full" : "short";
                 HttpClient client = new HttpClient(Utility.FastClientHandler);
 
-                string json = await client.GetStringAsync($"http://omdbapi.com/?apikey={apiKey}&type=movie&plot=full&t={title}");
+                string json = await client.GetStringAsync($"http://omdbapi.com/?apikey={apiKey}&type=movie&plot={plot}&t={title}");
 
                 if (!JObject.Parse(json).Value<bool>("Response"))
                 {

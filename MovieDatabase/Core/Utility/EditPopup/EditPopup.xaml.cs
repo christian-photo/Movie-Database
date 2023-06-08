@@ -49,6 +49,8 @@ namespace MovieDatabase.Core.Utility.EditPopup
                         return;
                     }
 
+                    m.Cleanup();
+
                     m.Info.Uuid = VM.SelectedMovie.Info.Uuid;
                     string oldTitle = VM.SelectedMovie.Info.Title;
 

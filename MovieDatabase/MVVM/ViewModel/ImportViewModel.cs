@@ -280,7 +280,7 @@ namespace MovieDatabase.MVVM.ViewModel
             databaseMediator = mediator;
 
             // InfoProvider = new ImdbProvider(MainWindow.informations.GetImdbApiKey());
-            InfoProvider = new OmdbInfoProvider(MainWindow.informations.GetOmdbApiKey());
+            InfoProvider = new OmdbInfoProvider(MainWindow.informations.GetOmdbApiKey(), MainWindow.informations.FullOmdbPlot);
 
             ImportFolders = new RelayCommand(async o =>
             {
@@ -382,6 +382,7 @@ namespace MovieDatabase.MVVM.ViewModel
                 Visibility = Visibility.Visible;
 
                 Log.Logger.Information($"Starting collecting Information! (Found {files.Count} files)");
+                List<Movie> newMovies = new List<Movie>();
                 foreach (string file in files)
                 {
                     if (CheckIfFileIsRegistered(file))
@@ -404,8 +405,9 @@ namespace MovieDatabase.MVVM.ViewModel
                         continue;
                     }
                     databaseMediator.GetCurrentDatabase().Movies.Add(mov);
+                    newMovies.Add(mov);
                 }
-                foreach (Movie mov in databaseMediator.GetCurrentDatabase().Movies)
+                foreach (Movie mov in newMovies)
                 {
                     MainViewModel.Instance.HomeVM.AddMovieToView(mov);
                 }
