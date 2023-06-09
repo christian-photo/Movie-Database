@@ -302,9 +302,11 @@ namespace MovieDatabase.MVVM.ViewModel
         {
             databaseMediator = mediator;
 
+            selectedProvider = new OmdbInfoProvider(MainWindow.informations.GetOmdbApiKey(), MainWindow.informations.FullOmdbPlot);
+
             InfoProviders = new List<IMovieInfoProvider>()
             {
-                new OmdbInfoProvider(MainWindow.informations.GetOmdbApiKey(), MainWindow.informations.FullOmdbPlot),
+                selectedProvider,
                 new ImdbProvider(MainWindow.informations.GetImdbApiKey(), IMDbApiLib.Models.Language.en)
             };
 
