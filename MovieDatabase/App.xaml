@@ -27,11 +27,11 @@
 
                 <ResourceDictionary Source="/MovieDatabase;component/Theme/Controls/MovieControl.xaml" />
 
+                <ResourceDictionary Source="MVVM/Model/Converter/Converters.xaml" />
+
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
-
-            <converter:DatabaseNameConverter x:Key="DatabaseNameConverter" />
 
             <DataTemplate DataType="{x:Type viewmodel:HomeViewModel}">
                 <view:HomeView />

@@ -201,6 +201,24 @@ namespace MovieDatabase.MVVM
             }
         }
 
+        private string _tomatoes;
+        public string Tomatoes
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_tomatoes))
+                {
+                    return "";
+                }
+                return $"Rotten Tomatoes: " + _tomatoes;
+            }
+            set
+            {
+                _tomatoes = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string _plot = Loc.Instance[TranslationString.CLICK_TO_SHOW_PLOT];
         public string Plot
         {
@@ -316,6 +334,7 @@ namespace MovieDatabase.MVVM
             Genres = "";
             IMDBRating = "";
             MetaScore = "";
+            Tomatoes = "";
 
             EditVisibility = Visibility.Hidden;
         }
@@ -366,6 +385,8 @@ namespace MovieDatabase.MVVM
             // Show MetaScore
             MetaScore = "";
 
+            Tomatoes = "";
+
             EditVisibility = Visibility.Hidden;
         }
 
@@ -404,6 +425,8 @@ namespace MovieDatabase.MVVM
             IMDBRating = movie.Info.ImDbRating;
             // Show MetaScore
             MetaScore = movie.Info.MetacriticRating;
+
+            Tomatoes = movie.Info.RottenTomatoesRating;
 
             EditVisibility = Visibility.Visible;
         }

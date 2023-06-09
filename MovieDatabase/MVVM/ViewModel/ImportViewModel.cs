@@ -22,6 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -271,16 +272,41 @@ namespace MovieDatabase.MVVM.ViewModel
             }
         }
 
+        private List<IMovieInfoProvider> providers = new List<IMovieInfoProvider>();
+        public List<IMovieInfoProvider> InfoProviders
+        {
+            get => providers;
+            set
+            {
+                providers = value;
+                OnPropertyChanged();
+            }
+        }
+
         private DatabaseMediator databaseMediator;
 
-        public IMovieInfoProvider InfoProvider { get; set; }
+        private IMovieInfoProvider selectedProvider;
+        public int InfoProviderIndex
+        {
+            get => InfoProviders.IndexOf(selectedProvider);
+            set
+            {
+                selectedProvider = InfoProviders[value];
+                OnPropertyChanged();
+            }
+        }
+
+        public IMovieInfoProvider GetSelectedProvider() => selectedProvider;
 
         public ImportViewModel(DatabaseMediator mediator)
         {
             databaseMediator = mediator;
 
-            // InfoProvider = new ImdbProvider(MainWindow.informations.GetImdbApiKey());
-            InfoProvider = new OmdbInfoProvider(MainWindow.informations.GetOmdbApiKey(), MainWindow.informations.FullOmdbPlot);
+            InfoProviders = new List<IMovieInfoProvider>()
+            {
+                new OmdbInfoProvider(MainWindow.informations.GetOmdbApiKey(), MainWindow.informations.FullOmdbPlot),
+                new ImdbProvider(MainWindow.informations.GetImdbApiKey(), IMDbApiLib.Models.Language.en)
+            };
 
             ImportFolders = new RelayCommand(async o =>
             {
@@ -300,7 +326,7 @@ namespace MovieDatabase.MVVM.ViewModel
                     return;
                 }
 
-                if (!await InfoProvider.Validate())
+                if (!await selectedProvider.Validate())
                     return;
 
                 Visibility = Visibility.Visible;
@@ -335,11 +361,11 @@ namespace MovieDatabase.MVVM.ViewModel
                     if (Split)
                     {
                         string title = GetRealTitle(Path.GetFileNameWithoutExtension(file));
-                        mov = await RegisterMovie(file, title, InfoProvider);
+                        mov = await RegisterMovie(file, title, selectedProvider);
                     }
                     else
                     {
-                        mov = await RegisterMovie(file, Path.GetFileNameWithoutExtension(file), InfoProvider);
+                        mov = await RegisterMovie(file, Path.GetFileNameWithoutExtension(file), selectedProvider);
                     }
                     if (mov is null)
                     {
@@ -376,7 +402,7 @@ namespace MovieDatabase.MVVM.ViewModel
                     return;
                 }
 
-                if (!await InfoProvider.Validate())
+                if (!await selectedProvider.Validate())
                     return;
 
                 Visibility = Visibility.Visible;
@@ -394,11 +420,11 @@ namespace MovieDatabase.MVVM.ViewModel
                     if (Split)
                     {
                         string title = GetRealTitle(Path.GetFileNameWithoutExtension(file));
-                        mov = await RegisterMovie(file, title, InfoProvider);
+                        mov = await RegisterMovie(file, title, selectedProvider);
                     }
                     else
                     {
-                        mov = await RegisterMovie(file, Path.GetFileNameWithoutExtension(file), InfoProvider);
+                        mov = await RegisterMovie(file, Path.GetFileNameWithoutExtension(file), selectedProvider);
                     }
                     if (mov is null)
                     {
@@ -552,11 +578,11 @@ namespace MovieDatabase.MVVM.ViewModel
                         if (Split)
                         {
                             string title = GetRealTitle(Path.GetFileNameWithoutExtension(movie.Name));
-                            mov = await RegisterMovie(movie.Name, title, InfoProvider);
+                            mov = await RegisterMovie(movie.Name, title, selectedProvider);
                         }
                         else
                         {
-                            mov = await RegisterMovie(movie.Name, Path.GetFileNameWithoutExtension(movie.Name), InfoProvider);
+                            mov = await RegisterMovie(movie.Name, Path.GetFileNameWithoutExtension(movie.Name), selectedProvider);
                         }
                         if (mov is null)
                         {

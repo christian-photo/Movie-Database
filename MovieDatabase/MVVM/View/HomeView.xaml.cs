@@ -37,7 +37,7 @@ namespace MovieDatabase.MVVM.View
 
         private void Edit(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            new EditPopup(MainViewModel.Instance.HomeVM.SelectedMovie, MainViewModel.Instance.ImportVM.InfoProvider).ShowDialog();
+            new EditPopup(MainViewModel.Instance.HomeVM.SelectedMovie, MainViewModel.Instance.ImportVM.GetSelectedProvider()).ShowDialog();
         }
     }
 }

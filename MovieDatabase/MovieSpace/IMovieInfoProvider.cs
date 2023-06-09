@@ -18,5 +18,7 @@ namespace MovieDatabase.MovieSpace
         public Task<MovieInfo> MakeInfo(string title, bool newGuid = true, string Guid = null);
 
         public Task<bool> Validate();
+
+        public string GetName();
     }
 }

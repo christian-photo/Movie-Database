@@ -145,6 +145,12 @@
                             FontSize="20"
                             Foreground="White"
                             Text="{Binding MetaScore}" />
+                        <TextBlock
+                            Margin="10"
+                            HorizontalAlignment="Center"
+                            FontSize="20"
+                            Foreground="White"
+                            Text="{Binding Tomatoes}" />
                         <Separator Visibility="{Binding EditVisibility}" />
                         <TextBlock
                             Margin="10,15,0,0"

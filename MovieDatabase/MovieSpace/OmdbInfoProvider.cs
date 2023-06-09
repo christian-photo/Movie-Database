@@ -11,6 +11,8 @@
 
 using MovieDatabase.Util;
 using Newtonsoft.Json.Linq;
+using OMDbApiNet;
+using OMDbApiNet.Model;
 using Serilog;
 using System;
 using System.Linq;
@@ -21,31 +23,30 @@ namespace MovieDatabase.MovieSpace
 {
     public class OmdbInfoProvider : IMovieInfoProvider
     {
-        private string apiKey;
         private bool fullPlot;
+
+        private AsyncOmdbClient client;
 
         public OmdbInfoProvider(string apiKey, bool fullplot)
         {
-            this.apiKey = apiKey;
             this.fullPlot = fullplot;
+
+            client = new AsyncOmdbClient(apiKey, true);
         }
 
         public async Task<MovieInfo> MakeInfo(string title, bool newGuid = true, string Guid = null)
         {
             try
             {
-                string plot = fullPlot ? "full" : "short";
-                HttpClient client = new HttpClient(Utility.FastClientHandler);
+                Item movie = await client.GetItemByTitleAsync(title, OmdbType.Movie, fullPlot);
 
-                string json = await client.GetStringAsync($"http://omdbapi.com/?apikey={apiKey}&type=movie&plot={plot}&t={title}");
-
-                if (!JObject.Parse(json).Value<bool>("Response"))
+                if (!bool.Parse(movie.Response))
                 {
-                    Log.Logger.Warning(JObject.Parse(json).Value<string>("Error"));
+                    Log.Logger.Warning(movie.Error);
                     return null;
                 }
 
-                MovieInfo Info = CreateByJson(json, newGuid, Guid);
+                MovieInfo Info = CreateByMovie(movie, newGuid, Guid);
                 if (Info != null)
                 {
                     return Info;
@@ -59,39 +60,38 @@ namespace MovieDatabase.MovieSpace
             }
         }
 
-        private static MovieInfo CreateByJson(string json, bool NewGuid = true, string uuid = null)
+        private static MovieInfo CreateByMovie(Item movie, bool NewGuid = true, string uuid = null)
         {
             try
             {
-                JObject obj = JObject.Parse(json);
-                MovieInfo movie = new MovieInfo
+                MovieInfo info = new MovieInfo
                 {
-                    Title = obj.Value<string>("Title"),
-                    Year = obj.Value<string>("Year"),
-                    Image = obj.Value<string>("Poster"),
-                    ReleaseDate = obj.Value<string>("Released"),
-                    RuntimeStr = obj.Value<string>("Runtime"),
-                    Plot = obj.Value<string>("Plot"),
-                    Awards = obj.Value<string>("Awards"),
-                    Actors = obj.Value<string>("Actors"),
-                    Director = obj.Value<string>("Director"),
-                    Genres = obj.Value<string>("Genre"),
-                    Languages = obj.Value<string>("Language"),
-                    ImDbRating = obj.Value<string>("imdbRating"),
-                    RottenTomatoesRating = obj["Ratings"].FirstOrDefault(r => r["Source"].Value<string>().Equals("Rotten Tomatoes"))?["Value"].Value<string>(),
-                    MetacriticRating = obj.Value<string>("Metascore")
+                    Title = movie.Title,
+                    Year = movie.Year,
+                    Image = movie.Poster,
+                    ReleaseDate = movie.Released,
+                    RuntimeStr = movie.Runtime,
+                    Plot = movie.Plot,
+                    Awards = movie.Awards,
+                    Actors = movie.Actors,
+                    Director = movie.Director,
+                    Genres = movie.Genre,
+                    Languages = movie.Language,
+                    ImDbRating = movie.ImdbRating,
+                    RottenTomatoesRating = movie.Ratings[1].Value,
+                    MetacriticRating = movie.Metascore
                 };
 
                 if (NewGuid)
                 {
-                    movie.Uuid = Guid.NewGuid().ToString();
+                    info.Uuid = Guid.NewGuid().ToString();
                 }
                 else
                 {
-                    movie.Uuid = uuid;
+                    info.Uuid = uuid;
                 }
 
-                return movie;
+                return info;
             }
             catch (Exception ex)
             {
@@ -104,12 +104,7 @@ namespace MovieDatabase.MovieSpace
         {
             try
             {
-                HttpClient client = new HttpClient(Utility.FastClientHandler);
-
-                Log.Logger.Verbose("OMDB Validation call: " + $"http://www.omdbapi.com/?apikey={apiKey}&t=Inception");
-                string json = await client.GetStringAsync($"http://www.omdbapi.com/?apikey={apiKey}&t=Inception");
-
-                return JObject.Parse(json).Value<bool>("Response");
+                return bool.Parse((await client.GetItemByTitleAsync("Inception", OmdbType.Movie, fullPlot)).Response);
             } 
             catch(Exception ex)
             {
@@ -117,5 +112,7 @@ namespace MovieDatabase.MovieSpace
                 return false;
             }
         }
+
+        public string GetName() => "Omdb Provider";
     }
 }

@@ -9,12 +9,13 @@
 
 #endregion "copyright"
 
+using IMDbApiLib;
+using IMDbApiLib.Models;
 using MovieDatabase.Core;
 using MovieDatabase.Util;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -22,42 +23,36 @@ namespace MovieDatabase.MovieSpace
 {
     public class ImdbProvider : IMovieInfoProvider
     {
-        private string apikey;
-        public ImdbProvider(string apiKey)
+        private ApiLib client;
+        private Language lang;
+
+        public ImdbProvider(string apiKey, Language language)
         {
-            apikey = apiKey;
+            client = new ApiLib(apiKey);
+            lang = language;
         }
 
         public async Task<MovieInfo> MakeInfo(string title, bool newGuid = true, string Guid = null)
         {
             try
             {
-                string lang = "en";
-                string id;
+                SearchData result = await client.SearchMovieAsync(title);
 
-                HttpClient client = new HttpClient(Utility.FastClientHandler);
-
-                string _json = await client.GetStringAsync("http://imdb-api.com/" + lang + "/API/SearchMovie/" + apikey + "/" + title);
-
-                if (JObject.Parse(_json).Value<string>("errorMessage").StartsWith("Maximum usage"))
+                if (result.ErrorMessage.StartsWith("Maximum usage"))
                 {
                     Log.Logger.Warning("Limit of API Requests reached");
                     return null;
                 }
-                
-                JToken token = JObject.Parse(_json).SelectToken("$.results[0].id");
 
-                if (token is null)
+                TitleData data = await client.TitleAsync(result.Results[0].Id, lang, Ratings: true);
+
+                if (data.ErrorMessage.StartsWith("Maximum usage"))
                 {
-                    Log.Logger.Warning("token is null. Timeout?");
+                    Log.Logger.Warning("Limit of API Requests reached");
                     return null;
                 }
 
-                id = token.ToObject<string>();
-
-                string json = await client.GetStringAsync("http://imdb-api.com/" + lang + "/API/Title/" + apikey + "/" + id);
-
-                MovieInfo Info = CreateByJson(json, newGuid, Guid);
+                MovieInfo Info = CreateByData(data, newGuid, Guid);
                 if (Info != null)
                 {
                     return Info;
@@ -71,27 +66,26 @@ namespace MovieDatabase.MovieSpace
             }
         }
 
-        private static MovieInfo CreateByJson(string json, bool NewGuid = true, string uuid = null)
+        private static MovieInfo CreateByData(TitleData data, bool NewGuid = true, string uuid = null)
         {
             try
             {
-                JObject obj = JObject.Parse(json);
                 MovieInfo movie = new MovieInfo
                 {
-                    Title = obj.Value<string>("title"),
-                    Year = obj.Value<string>("year"),
-                    Image = obj.Value<string>("image"),
-                    ReleaseDate = obj.Value<string>("releaseDate"),
-                    RuntimeStr = obj.Value<string>("runtimeStr"),
-                    Plot = Loc.Instance.SelectedIMDBLang == "english" ? obj.Value<string>("plot") : obj.Value<string>("plotlocal"),
-                    Awards = obj.Value<string>("awards"),
-                    Actors = obj.Value<object>("stars").ToString(),
-                    Director = obj.Value<string>("directors"),
-                    Genres = obj.Value<object>("genres").ToString(),
-                    Languages = obj.Value<object>("languages").ToString(),
-                    ImDbRating = obj.Value<string>("imDbRating"),
-                    MetacriticRating = obj.Value<string>("metacriticRating"),
-                    RottenTomatoesRating = obj.Value<JArray>("ratings").Value<string>("rottenTomatoes")
+                    Title = data.Title,
+                    Year = data.Year,
+                    Image = data.Image,
+                    ReleaseDate = data.ReleaseDate,
+                    RuntimeStr = data.RuntimeStr,
+                    Plot = Loc.Instance.SelectedIMDBLang == "english" ? data.Plot : data.PlotLocal,
+                    Awards = data.Awards,
+                    Director = data.Directors,
+                    Genres = data.Genres,
+                    Actors = data.Stars,
+                    Languages = data.Languages,
+                    ImDbRating = data.IMDbRating,
+                    MetacriticRating = data.MetacriticRating,
+                    RottenTomatoesRating = data.Ratings.RottenTomatoes + "%"
                 };
 
                 if (NewGuid)
@@ -116,20 +110,11 @@ namespace MovieDatabase.MovieSpace
         {
             try
             {
-                HttpClient client = new HttpClient(Utility.FastClientHandler);
+                SearchData result = await client.SearchMovieAsync("Inception");
 
-                string _json = await client.GetStringAsync("http://imdb-api.com/en/API/SearchMovie/" + apikey + "/Inception");
-
-                if (JObject.Parse(_json).Value<string>("errorMessage").StartsWith("Maximum usage"))
+                if (result.ErrorMessage.StartsWith("Maximum usage"))
                 {
-                    Log.Logger.Warning("Limit of API Requests reached (IMDB)");
-                    return false;
-                }
-
-                JToken token = JObject.Parse(_json).SelectToken("$.results[0].id");
-
-                if (token is null)
-                {
+                    Log.Logger.Warning("Limit of API Requests reached");
                     return false;
                 }
 
@@ -141,5 +126,7 @@ namespace MovieDatabase.MovieSpace
                 return false;
             }
         }
+
+        public string GetName() => "Imdb Provider";
     }
 }
